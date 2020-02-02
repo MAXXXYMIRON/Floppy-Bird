@@ -32,6 +32,7 @@ namespace FlopyBirdGame
         static Bird()
         {
             texture = new Texture(PlayGame.FileSprites);
+            texture.Smooth = true;
 
             SBird = new Sprite(texture, new IntRect(381, 187, BIRD_W, 64));
             SBird.TextureRect = SIntRect;
@@ -80,23 +81,33 @@ namespace FlopyBirdGame
             }
             if (Pos.Y >= PlayGame.Height - 43) return;
 
-            if (SBird.Rotation <= 80)
+
+            if (SBird.Rotation <= -9)
             {
-                SBird.Rotation += 5;
-                Pos.Y += Gravity / 1.4f;
+                SBird.Rotation += 1f;
+            }
+            else if(SBird.Rotation <= 10)
+            {
+                SBird.Rotation += 1f;
+                Pos.Y += Gravity / 1.3f;
+            }
+            else if (SBird.Rotation <= 80)
+            {
+                SBird.Rotation += 3f;
+                Pos.Y += Gravity / 1f;
             }
             else
-                Pos.Y += Gravity / 1.2f;
+                Pos.Y += Gravity / 0.9f;
 
             SBird.Position = Pos;
         }
 
         private static void Top()
         {
-            Pos.Y -= 8f;
-            SBird.Rotation -= (SBird.Rotation > -20) ? 20 : 0;
+            Pos.Y -= 7f;
+            SBird.Rotation -= (SBird.Rotation > -10) ? 8 : 0;
 
-            if ((LastDownCoordinate - Pos.Y) > 100)
+            if ((LastDownCoordinate - Pos.Y) > 70)
             {
                 Up = false;
                 return;

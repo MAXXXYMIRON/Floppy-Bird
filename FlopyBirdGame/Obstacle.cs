@@ -20,8 +20,8 @@ namespace FlopyBirdGame
 
         static Vector2f Pos;
 
-        static Sprite[] Up = new Sprite[5];
-        static Sprite[] Down = new Sprite[5];
+        static Sprite[] Up = new Sprite[4];
+        static Sprite[] Down = new Sprite[4];
 
         static Random random = new Random();
 
@@ -41,13 +41,13 @@ namespace FlopyBirdGame
                 Down[i].Scale = Up[0].Scale;
             }
 
-            Pos.X = PlayGame.Width / 5 - (PlayGame.Width / 5) / 2;
+            Pos.X = PlayGame.Width / 4 - (PlayGame.Width / 4) / 2;
             Up[0].Position = Pos;
             Down[0].Position = Pos;
             for (byte i = 1; i < Down.Length; i++)
             {
                 Pos = Up[i - 1].Position;
-                Pos.X += PlayGame.Width / 5;
+                Pos.X += PlayGame.Width / 4;
 
                 Up[i].Position = Pos;
                 Down[i].Position = Pos;
