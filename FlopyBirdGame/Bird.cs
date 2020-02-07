@@ -17,9 +17,6 @@ namespace FlopyBirdGame
         static Vector2f Pos;
         static IntRect SIntRect = new IntRect(381, 187, BIRD_W, BIRD_H);
 
-        static float Time;
-        static Clock clock = new Clock();
-
         static float Gravity = 9.8f;
         static bool Up = false;
         static float LastDownCoordinate;
@@ -64,12 +61,28 @@ namespace FlopyBirdGame
 
         private static void Jump()
         {
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
             {
                 if (Up || Pos.Y < 0) return;
                 Up = true;
                 LastDownCoordinate = Pos.Y;
             }
+        }
+
+        private static void Top()
+        {
+            Pos.Y -= 7f;
+
+            if (SBird.Rotation > 0)
+                SBird.Rotation -= 8;
+            else if (SBird.Rotation != -10) SBird.Rotation -= 10 - Math.Abs(SBird.Rotation);
+
+            if ((LastDownCoordinate - Pos.Y) > 70)
+            {
+                Up = false;
+                return;
+            }
+            SBird.Position = Pos;
         }
 
         private static void Drop()
@@ -82,13 +95,13 @@ namespace FlopyBirdGame
             if (Pos.Y >= PlayGame.Height - 43) return;
 
 
-            if (SBird.Rotation <= -9)
+            if (SBird.Rotation <= -7)
             {
                 SBird.Rotation += 1f;
             }
             else if(SBird.Rotation <= 10)
             {
-                SBird.Rotation += 1f;
+                SBird.Rotation += 1.1f;
                 Pos.Y += Gravity / 1.3f;
             }
             else if (SBird.Rotation <= 80)
@@ -97,21 +110,8 @@ namespace FlopyBirdGame
                 Pos.Y += Gravity / 1f;
             }
             else
-                Pos.Y += Gravity / 0.9f;
+                Pos.Y += Gravity / 0.95f;
 
-            SBird.Position = Pos;
-        }
-
-        private static void Top()
-        {
-            Pos.Y -= 7f;
-            SBird.Rotation -= (SBird.Rotation > -10) ? 8 : 0;
-
-            if ((LastDownCoordinate - Pos.Y) > 70)
-            {
-                Up = false;
-                return;
-            }
             SBird.Position = Pos;
         }
     }
