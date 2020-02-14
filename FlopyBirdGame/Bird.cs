@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+using static System.Math;
+using static FlopyBirdGame.Obstacle;
 
 namespace FlopyBirdGame
 {
@@ -22,9 +20,15 @@ namespace FlopyBirdGame
         static float LastDownCoordinate;
         static float AnimationCounter = 0.05f;
 
+        static Vector2f PointTopRight;
+        static Vector2f PointDownRight;
+        static Vector2f PointDown;
+        static float Rotation;
+        const float GRADE = (float)(180 / PI);
+
         public const byte BIRD_W = 17;
         public const byte BIRD_H = 12;
-        private const byte SHIFT = 26;
+        const byte SHIFT = 26;
 
         static Bird()
         {
@@ -43,12 +47,12 @@ namespace FlopyBirdGame
         {
             WingsFlap();
             Drop();
-            Jump();
+            Swing();
+            Collision();
             PlayGame.Window.Draw(SBird);
         }
 
-
-        private static void WingsFlap()
+        static void WingsFlap()
         {
             if (AnimationCounter > 0.58)
             {
@@ -59,17 +63,20 @@ namespace FlopyBirdGame
             AnimationCounter += 0.05f;
         }
 
-        private static void Jump()
+        //При нажатии на клавишу, несколько циклов игры, происходит 
+        //измение координаты по y и наклонноса, вверх
+        static void Swing()
         {
             if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
             {
                 if (Up || Pos.Y < 0) return;
-                Up = true;
+                Up = true; 
                 LastDownCoordinate = Pos.Y;
             }
         }
 
-        private static void Top()
+        //Увеличениие высоты на 70 пикселей
+        static void Flight()
         {
             Pos.Y -= 7f;
 
@@ -84,14 +91,16 @@ namespace FlopyBirdGame
             }
             SBird.Position = Pos;
         }
-
-        private static void Drop()
+            
+        //Усеньшение высоты и наклон вниз
+        static void Drop()
         {
             if (Up)
             {
-                Top();
+                Flight();
                 return;
             }
+
             if (Pos.Y >= PlayGame.Height - 43) return;
 
 
@@ -112,7 +121,42 @@ namespace FlopyBirdGame
             else
                 Pos.Y += Gravity / 0.95f;
 
+
             SBird.Position = Pos;
+        }
+
+
+        static void Collision()
+        {
+            if (PosObs.X == 0)
+            {
+                SBird.Scale = new Vector2f(3, 3);
+                return;
+            }
+
+             if (ClashOccured(PosObs.Y - 190, PosObs.Y))
+            {
+                SBird.Scale = new Vector2f(5, 5);
+            }
+        }
+
+        static bool ClashOccured(float yTop, float yDown)
+        {
+            PointTopRight = SBird.Position;
+            PointDownRight = SBird.Position;
+            PointDown = SBird.Position;
+
+            Rotation = (SBird.Rotation < 0) ? -SBird.Rotation : 360 - SBird.Rotation;
+
+            PointTopRight.X += BIRD_W * (float)Cos(Rotation) * GRADE;
+            PointDownRight.X += (float)Sqrt((BIRD_W * BIRD_W) + (BIRD_H * BIRD_H)) * (float)Cos(Rotation) * GRADE;
+            PointDown.X += BIRD_H * (float)Cos(Rotation) * GRADE;
+
+            PointTopRight.Y += BIRD_W * (float)Sin(Rotation) * GRADE;
+            PointDownRight.Y += (float)Sqrt((BIRD_W * BIRD_W) + (BIRD_H * BIRD_H)) * (float)Sin(Rotation) * GRADE;
+            PointDown.Y += BIRD_H * (float)Sin(Rotation) * GRADE;
+
+            return false;
         }
     }
 }

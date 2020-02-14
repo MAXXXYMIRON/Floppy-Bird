@@ -17,12 +17,11 @@ namespace FlopyBirdGame
         static Texture textureU = new Texture(PlayGame.FileSprites, new IntRect(152, 3, OBSTACLE_W, OBSTACLE_H));
         static Texture textureD = new Texture(PlayGame.FileSprites, new IntRect(180, 3, OBSTACLE_W, OBSTACLE_H));
 
+        public static Vector2f PosObs { get; private set; } = new Vector2f(0, 0);
 
         static Vector2f Pos;
-
         static Sprite[] Up = new Sprite[4];
         static Sprite[] Down = new Sprite[4];
-
         static Random random = new Random();
 
         static Obstacle()
@@ -73,7 +72,7 @@ namespace FlopyBirdGame
             for (byte i = 0; i < Down.Length; i++)
             {
                 Pos.X = Up[i].Position.X;
-                Pos.Y = -(random.Next(0, 30) / 10f) * 100;
+                Pos.Y = -(random.Next(0, 25) / 10f) * 100;
                 Up[i].Position = Pos;
             }
         }
@@ -87,8 +86,10 @@ namespace FlopyBirdGame
 
                 HeightPillars(ref Up[i]);
                 //Спустить нижнее препядствие относительно верхнего
-                Pos.Y += OBSTACLE_H * 3 + 100;
+                Pos.Y += (OBSTACLE_H * 2.5f) + 190;
                 Down[i].Position = Pos;
+
+                CenterObstacle(i);
 
                 PlayGame.Window.Draw(Up[i]);
                 PlayGame.Window.Draw(Down[i]);
@@ -114,8 +115,22 @@ namespace FlopyBirdGame
             if (Pillar.Position.X <= -OBSTACLE_W * 2.5f)
             {
                 Pos.X = PlayGame.Width;
-                Pos.Y = -(random.Next(0, 30) / 10f) * 100;
+                Pos.Y = -(random.Next(0, 25) / 10f) * 100;
                 Pillar.Position = Pos;
+            }
+        }
+
+        private static void CenterObstacle(byte i)
+        {
+            if (Up[i].Position.X <= PlayGame.Width / 2 && Up[i].Position.X > ((PlayGame.Width / 2) - ((OBSTACLE_W * 2.5f) + 15)))
+            {
+                PosObs = Down[i].Position;
+                return;
+            }
+            else if (Up[i].Position.X == ((PlayGame.Width / 2) - ((OBSTACLE_W * 2.5f) + 15)))
+            {
+                PosObs -= PosObs;
+                return;
             }
         }
     }
