@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
-using SFML.Window;
 
 namespace FlopyBirdGame
 {
@@ -23,6 +17,7 @@ namespace FlopyBirdGame
         static Sprite[] Up = new Sprite[4];
         static Sprite[] Down = new Sprite[4];
         static Random random = new Random();
+        static byte RandTop = 5, RandDown = 35;
 
         static Obstacle()
         {
@@ -72,7 +67,7 @@ namespace FlopyBirdGame
             for (byte i = 0; i < Down.Length; i++)
             {
                 Pos.X = Up[i].Position.X;
-                Pos.Y = -(random.Next(0, 25) / 10f) * 100;
+                Pos.Y = -(random.Next(RandTop, RandDown) / 10f) * 100;
                 Up[i].Position = Pos;
             }
         }
@@ -115,19 +110,20 @@ namespace FlopyBirdGame
             if (Pillar.Position.X <= -OBSTACLE_W * 2.5f)
             {
                 Pos.X = PlayGame.Width;
-                Pos.Y = -(random.Next(0, 25) / 10f) * 100;
+                Pos.Y = -(random.Next(RandTop, RandDown) / 10f) * 100;
                 Pillar.Position = Pos;
             }
         }
 
+        //Возвращать позицию препядствия, которое проходит мимо игрока
         private static void CenterObstacle(byte i)
         {
-            if (Up[i].Position.X <= PlayGame.Width / 2 && Up[i].Position.X > ((PlayGame.Width / 2) - ((OBSTACLE_W * 2.5f) + 15)))
+            if (Up[i].Position.X <= PlayGame.Width / 2 && Up[i].Position.X > ((PlayGame.Width / 2) - ((OBSTACLE_W * 2.5f) + 50)))
             {
                 PosObs = Down[i].Position;
                 return;
             }
-            else if (Up[i].Position.X == ((PlayGame.Width / 2) - ((OBSTACLE_W * 2.5f) + 15)))
+            else if (Up[i].Position.X == ((PlayGame.Width / 2) - ((OBSTACLE_W * 2.5f) + 50)))
             {
                 PosObs -= PosObs;
                 return;
