@@ -9,13 +9,13 @@ namespace FlopyBirdGame
     static class PlayGame
     {
         public static RenderWindow Window;
-        public const ushort Height = 600;
-        public const ushort Width = 1200;
+        public const ushort HEIGHT = 600;
+        public const ushort WIGTH = 1200;
         public const string FileSprites = "Flappy Bird Sprites.png";
 
         private static void Main()
         {
-            Window = new RenderWindow(new VideoMode(Width, Height), "Flopy Bird");
+            Window = new RenderWindow(new VideoMode(WIGTH, HEIGHT), "Flopy Bird");
             Window.SetVerticalSyncEnabled(true);
             Window.Closed += close;
             Window.Clear();

@@ -1,56 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
 
 namespace FlopyBirdGame
 {
     static class Background
     {
-        static Texture Back;
-        static Sprite FirstBack;
-        static Sprite SecondBack;
+        static Texture tex1;
+        static Sprite FirstBackground;
+        static Sprite SecondBackground;
 
         static Vector2f Pos;
-
-        const ushort BACK_W = 143;
-        const ushort BACK_H = 255;
-
         static Background()
         {
-            Back = new Texture(PlayGame.FileSprites, new IntRect(3, 0, BACK_W, BACK_H));
-            Back.Smooth = true;
+            tex1 = new Texture(PlayGame.FileSprites, new IntRect(3, 0, 143, 255));
+            tex1.Smooth = true;
 
-            FirstBack = new Sprite(Back);
-            FirstBack.Scale = new Vector2f((float)PlayGame.Width / BACK_W, (float)PlayGame.Height / BACK_H);
+            FirstBackground = new Sprite(tex1);
+            FirstBackground.Scale = new Vector2f((float)PlayGame.WIGTH / 143, (float)PlayGame.HEIGHT / 255);
 
-            SecondBack = new Sprite(Back);
-            SecondBack.Scale = new Vector2f((float)PlayGame.Width / BACK_W, (float)PlayGame.Height / BACK_H);
-
-            Pos = FirstBack.Position;
+            SecondBackground = new Sprite(tex1);
+            SecondBackground.Scale = FirstBackground.Scale;
         }
 
         public static void DrawBack()
         {
             TransPosition();
-            PlayGame.Window.Draw(FirstBack);
-            PlayGame.Window.Draw(SecondBack);
+            PlayGame.Window.Draw(FirstBackground);
+            PlayGame.Window.Draw(SecondBackground);
         }
 
         static void TransPosition()
         {
-            Pos.X = (Pos.X == -PlayGame.Width) ? 0 : Pos.X;
+            Pos.X = (Pos.X == -PlayGame.WIGTH) ? 0 : Pos.X;
 
             Pos.X -= 5;
-            FirstBack.Position = Pos;
+            FirstBackground.Position = Pos;
+            
+            Pos.X += PlayGame.WIGTH;
+            SecondBackground.Position = Pos;
 
-            Pos.X += PlayGame.Width;
-            SecondBack.Position = Pos;
-
-            Pos = FirstBack.Position;
+            Pos.X -= PlayGame.WIGTH;
         }
     }
 }

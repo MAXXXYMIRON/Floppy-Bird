@@ -1,11 +1,9 @@
-﻿using System;
-using SFML.Audio;
+﻿using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 using static System.Math;
 using static FlopyBirdGame.Obstacle;
-using System.Numerics;
 
 namespace FlopyBirdGame
 {
@@ -36,8 +34,6 @@ namespace FlopyBirdGame
 
         //Геймплей
         public static bool Die;
-        public static BigInteger Count = 0;
-        
 
         static Bird()
         {
@@ -47,19 +43,19 @@ namespace FlopyBirdGame
             SBird = new Sprite(texture, new IntRect(381, 187, BIRD_W, 64));
             SBird.TextureRect = SIntRect;
             SBird.Scale = new Vector2f(3, 3);
-            SBird.Position = new Vector2f((PlayGame.Width / 2) - (BIRD_W * 3), PlayGame.Height / 2);
+            SBird.Position = new Vector2f((PlayGame.WIGTH / 2) - (BIRD_W * 3), PlayGame.HEIGHT / 2);
 
             Pos = SBird.Position;
         }
 
         public static void DrawBird()
         {
-            Collision();
             Drop();
             if (!Die)
             {
                 WingsFlap();
                 Swing();
+                Collision();
             }
             PlayGame.Window.Draw(SBird);
         }
@@ -81,7 +77,8 @@ namespace FlopyBirdGame
         {
             if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
             {
-                if (Up || SBird.Position.Y < 50) return;
+                PointsCoordinate("PTR");
+                if (Up || PointTopRight < 50) return;
                 Up = true; 
                 LastDownCoordinate = Pos.Y;
             }
@@ -117,7 +114,7 @@ namespace FlopyBirdGame
             }
 
             PointsCoordinate("PDR");
-            if (PointDownRight >= PlayGame.Height - 40)
+            if (PointDownRight >= PlayGame.HEIGHT - 85)
             {
                 Die = true;
                 return;
@@ -148,8 +145,8 @@ namespace FlopyBirdGame
         //Проверка на сотлкновение с препядствием
         static void Collision()
         {
-            if (PosObs.X == 0 || Die) return;
-            if (ClashOccured(PosObs.Y - 190, PosObs.Y))
+            if (PosCenterObs.X == 0 || Die) return;
+            if (ClashOccured(PosCenterObs.Y - 190, PosCenterObs.Y))
                  Die = true;
         }
 
