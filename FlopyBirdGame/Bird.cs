@@ -46,6 +46,8 @@ namespace FlopyBirdGame
             SBird.Position = new Vector2f((PlayGame.WIGTH / 2) - (BIRD_W * 3), PlayGame.HEIGHT / 2);
 
             Pos = SBird.Position;
+
+            PointsCoordinate();
         }
 
         public static void DrawBird()
@@ -57,6 +59,12 @@ namespace FlopyBirdGame
                 Swing();
                 Collision();
             }
+            PlayGame.Window.Draw(SBird);
+        }
+
+        public static void DrawBirdNotDrop()
+        {
+            WingsFlap();
             PlayGame.Window.Draw(SBird);
         }
 
@@ -77,7 +85,8 @@ namespace FlopyBirdGame
         {
             if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
             {
-                PointsCoordinate("PTR");
+                if (SBird.Position.Y < 50)
+                     PointsCoordinate("PTR");
                 if (Up || PointTopRight < 50) return;
                 Up = true; 
                 LastDownCoordinate = Pos.Y;
@@ -113,7 +122,8 @@ namespace FlopyBirdGame
                 return;
             }
 
-            PointsCoordinate("PDR");
+            if(SBird.Position.Y > PlayGame.HEIGHT - 120)
+                 PointsCoordinate("PDR");
             if (PointDownRight >= PlayGame.HEIGHT - 85)
             {
                 Die = true;
@@ -145,8 +155,8 @@ namespace FlopyBirdGame
         //Проверка на сотлкновение с препядствием
         static void Collision()
         {
-            if (PosCenterObs.X == 0 || Die) return;
-            if (ClashOccured(PosCenterObs.Y - 190, PosCenterObs.Y))
+            if (PosCenterObs == 0 || Die) return;
+            if (ClashOccured(PosCenterObs - 190, PosCenterObs))
                  Die = true;
         }
 

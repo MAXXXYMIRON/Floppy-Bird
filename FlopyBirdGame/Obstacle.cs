@@ -21,7 +21,7 @@ namespace FlopyBirdGame
         static Sprite[] Down = new Sprite[4];
 
         //Позиция предствия на игрком
-        public static Vector2f PosCenterObs { get; private set; } = new Vector2f(0, 0);
+        public static ushort PosCenterObs { get; private set; } = 0;
         //Кол-во препядствий прошедших над игроком
         public static BigInteger Count = 0;
 
@@ -112,6 +112,15 @@ namespace FlopyBirdGame
             PlayGame.Window.Draw(Ground);
         }
 
+        //Рисуем только землю
+        public static void DrawGround()
+        {
+            if (PosG.X == -PlayGame.WIGTH) PosG.X = 0;
+            PosG.X -= 5;
+            Ground.Position = PosG;
+            PlayGame.Window.Draw(Ground);
+        }
+
         //Сдвинуть препядствие
         static void MovePillars(ref Sprite Pillar)
         {
@@ -141,13 +150,13 @@ namespace FlopyBirdGame
         {
             if (Up[i].Position.X <= PlayGame.WIGTH / 2 && Up[i].Position.X > ((PlayGame.WIGTH / 2) - ((OBSTACLE_W * 2.5f) + 50)))
             {
-                PosCenterObs = Down[i].Position;
+                PosCenterObs = (ushort)Down[i].Position.Y;
                 return;
             }
             else if (Up[i].Position.X == ((PlayGame.WIGTH / 2) - ((OBSTACLE_W * 2.5f) + 50)))
             {
                 Count++;
-                PosCenterObs -= PosCenterObs;
+                PosCenterObs = 0;
                 return;
             }
         }

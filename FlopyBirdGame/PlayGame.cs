@@ -21,6 +21,20 @@ namespace FlopyBirdGame
             Window.Clear();
 
 
+            while(Window.IsOpen && !Keyboard.IsKeyPressed(Keyboard.Key.Space))
+            {
+                Window.DispatchEvents();
+                Window.Clear();
+
+                Background.DrawBack();
+                Obstacle.DrawGround();
+                Bird.DrawBirdNotDrop();
+                Menu.DrawMenu();
+
+
+                Window.Display();
+            }
+
             while (Window.IsOpen)
             {
                 Window.DispatchEvents();
