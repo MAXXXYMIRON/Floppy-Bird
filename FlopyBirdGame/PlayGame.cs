@@ -13,6 +13,8 @@ namespace FlopyBirdGame
         public const ushort WIGTH = 1200;
         public const string FileSprites = "Flappy Bird Sprites.png";
 
+        static ResultInGame result = new ResultInGame();
+
         private static void Main()
         {
             Window = new RenderWindow(new VideoMode(WIGTH, HEIGHT), "Flopy Bird");
@@ -35,13 +37,14 @@ namespace FlopyBirdGame
                 Window.Display();
             }
 
-            while (Window.IsOpen)
+            while (Window.IsOpen /* && !Bird.Die*/)
             {
                 Window.DispatchEvents();
                 Window.Clear();
 
                 Background.DrawBack();
                 Obstacle.DrawObstacle();
+                result.DrawCount(Obstacle.Count);
                 Bird.DrawBird();
 
 
