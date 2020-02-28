@@ -1,11 +1,12 @@
 ﻿using System;
 using SFML.Graphics;
 using SFML.System;
+using SFML.Audio;
 using System.Numerics;
 
 namespace FlopyBirdGame
 {
-    static class Obstacle
+    class Obstacle
     {
         //Просто земля
         static Texture textureG = new Texture(PlayGame.FileSprites, new IntRect(215, 10, 168, 56));
@@ -20,7 +21,7 @@ namespace FlopyBirdGame
         static Sprite[] Up = new Sprite[4];
         static Sprite[] Down = new Sprite[4];
 
-        //Позиция предствия на игрком
+        //Позиция предствия над игрком
         public static ushort PosCenterObs { get; private set; } = 0;
         //Кол-во препядствий прошедших над игроком
         public static BigInteger Count = 0;
@@ -29,6 +30,11 @@ namespace FlopyBirdGame
         static Vector2f Pos;
         static Random random = new Random();
         static byte RandTop = 10, RandDown = 35;
+
+        //Звуки
+        public static SoundBuffer PointBuffer = new SoundBuffer("point.wav");
+        public static SoundBuffer FastPointBuffer = new SoundBuffer("Bonus.wav");
+        public static Sound Point = new Sound();
 
         static Obstacle()
         {
@@ -57,25 +63,84 @@ namespace FlopyBirdGame
                 Down[i].Scale = Up[0].Scale;
             }
 
+            ObstacleClear();
+        }
+
+        //Рисуем препядствия и землю с движением
+        public static void DrawObstacle()
+        {
+            for (byte i = 0; i < Up.Length; i++)
+            {
+                MovePillars(ref Up[i], 5);
+                Down[i].Position = Pos;
+
+                HeightPillars(ref Up[i]);
+                //Спустить нижнее препядствие относительно верхнего
+                Pos.Y += (OBSTACLE_H * 2.5f) + 190;
+                Down[i].Position = Pos;
+
+                if(!Bird.Die) CenterObstacle(i, 2);
+
+                PlayGame.Window.Draw(Up[i]);
+                PlayGame.Window.Draw(Down[i]);
+            }
+            DrawGround();
+        }
+
+        public static void DrawOneOstacle()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                MovePillars(ref Up[0], 5);
+                Down[0].Position = Pos;
+
+                HeightPillars(ref Up[0]);
+                Pos.Y += (OBSTACLE_H * 2.5f) + 190;
+                Down[0].Position = Pos;
+
+                if (!Bird.Die) CenterObstacle(0, 4); 
+            }
+
+            PlayGame.Window.Draw(Up[0]);
+            PlayGame.Window.Draw(Down[0]);
+
+            DrawGround();
+        }
+
+        //Рисуем только землю
+        public static void DrawGround()
+        {
+            if (PosG.X == -PlayGame.WIGTH) PosG.X = 0;
+            PosG.X -= 5;
+            Ground.Position = PosG;
+            PlayGame.Window.Draw(Ground);
+        }
+
+        //Рисуем без движения препядствий и земли
+        public static void DrawNotMove()
+        {
+            for (byte i = 0; i < Up.Length; i++)
+            {
+                PlayGame.Window.Draw(Up[i]);
+                PlayGame.Window.Draw(Down[i]);
+            }
+            PlayGame.Window.Draw(Ground);
+        }
+
+        public static void ObstacleClear()
+        {
+            Count = 0;
+            PosCenterObs = 0;
+
             //Задать расстояние м/у препядствиями
-            Pos.X = PlayGame.WIGTH / 4 - (PlayGame.WIGTH / 4) / 2;
+            Pos.X = PlayGame.WIGTH + PlayGame.WIGTH / 2;
             Up[0].Position = Pos;
             Down[0].Position = Pos;
             for (byte i = 1; i < Down.Length; i++)
             {
                 Pos = Up[i - 1].Position;
-                Pos.X += PlayGame.WIGTH / 4;
+                Pos.X += PlayGame.WIGTH / 4 + 15;
 
-                Up[i].Position = Pos;
-                Down[i].Position = Pos;
-            }
-
-            //Сдвинуть за пределы экрана препядствия
-            //Чтобы они не появились на экране сразу
-            for (byte i = 0; i < Down.Length; i++)
-            {
-                Pos = Up[i].Position;
-                Pos.X += PlayGame.WIGTH;
                 Up[i].Position = Pos;
                 Down[i].Position = Pos;
             }
@@ -89,45 +154,13 @@ namespace FlopyBirdGame
             }
         }
 
-        public static void DrawObstacle()
-        {
-            for (byte i = 0; i < Up.Length; i++)
-            {
-                MovePillars(ref Up[i]);
-                Down[i].Position = Pos;
-
-                HeightPillars(ref Up[i]);
-                //Спустить нижнее препядствие относительно верхнего
-                Pos.Y += (OBSTACLE_H * 2.5f) + 190;
-                Down[i].Position = Pos;
-
-                if(!Bird.Die) CenterObstacle(i);
-
-                PlayGame.Window.Draw(Up[i]);
-                PlayGame.Window.Draw(Down[i]);
-            }
-            if (PosG.X == -PlayGame.WIGTH) PosG.X = 0;
-            PosG.X -= 5;
-            Ground.Position = PosG;
-            PlayGame.Window.Draw(Ground);
-        }
-
-        //Рисуем только землю
-        public static void DrawGround()
-        {
-            if (PosG.X == -PlayGame.WIGTH) PosG.X = 0;
-            PosG.X -= 5;
-            Ground.Position = PosG;
-            PlayGame.Window.Draw(Ground);
-        }
-
         //Сдвинуть препядствие
-        static void MovePillars(ref Sprite Pillar)
+        static void MovePillars(ref Sprite Pillar, byte Step)
         {
             if(Pillar.Position.X > -OBSTACLE_W * 2.5f)
             {
                 Pos = Pillar.Position;
-                Pos.X -= 5;
+                Pos.X -= Step;
                 Pillar.Position = Pos;
             }
         }
@@ -146,16 +179,17 @@ namespace FlopyBirdGame
         }
 
         //Возвращать позицию препядствия, которое проходит мимо игрока
-        private static void CenterObstacle(byte i)
+        private static void CenterObstacle(byte i, byte div)
         {
-            if (Up[i].Position.X <= PlayGame.WIGTH / 2 && Up[i].Position.X > ((PlayGame.WIGTH / 2) - ((OBSTACLE_W * 2.5f) + 50)))
+            if (Up[i].Position.X <= PlayGame.WIGTH / div && Up[i].Position.X > ((PlayGame.WIGTH / div) - ((OBSTACLE_W * 2.5f) + 50)))
             {
                 PosCenterObs = (ushort)Down[i].Position.Y;
                 return;
             }
-            else if (Up[i].Position.X == ((PlayGame.WIGTH / 2) - ((OBSTACLE_W * 2.5f) + 50)))
+            else if (Up[i].Position.X == ((PlayGame.WIGTH / div) - ((OBSTACLE_W * 2.5f) + 50)))
             {
                 Count++;
+                Point.Play();
                 PosCenterObs = 0;
                 return;
             }

@@ -29,11 +29,12 @@ namespace FlopyBirdGame
             PlayGame.Window.Draw(SecondBackground);
         }
 
+        //Сдвиг фона
         static void TransPosition()
         {
             Pos.X = (Pos.X == -PlayGame.WIGTH) ? 0 : Pos.X;
 
-            Pos.X -= 5;
+            Pos.X -= 2;
             FirstBackground.Position = Pos;
             
             Pos.X += PlayGame.WIGTH;
