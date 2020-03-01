@@ -15,7 +15,8 @@ namespace FlopyBirdGame
 
         static ResultInGame result = new ResultInGame();
         static ResultInGameOver resultWin = new ResultInGameOver();
-        static byte Mode;
+        static bool? Fast = null;
+        static bool Mode;
 
         private static void Main()
         {
@@ -25,7 +26,7 @@ namespace FlopyBirdGame
             Window.Clear();
 
             //Меню игры
-            while(Window.IsOpen && Mode == 0)
+            while(Window.IsOpen && Fast is null)
             {
                 Window.DispatchEvents();
                 Window.Clear();
@@ -36,9 +37,9 @@ namespace FlopyBirdGame
                 Menu.DrawMenu();
 
                 if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
-                    Mode = 1;
+                    Fast = false;
                 if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
-                    Mode = 2;
+                    Fast = true;
 
                 Window.Display();
             }
@@ -47,7 +48,7 @@ namespace FlopyBirdGame
             while (Window.IsOpen)
             {
                 //Игра
-                if (Mode == 1)
+                if (!(bool)Fast)
                 {
                     Obstacle.Point.SoundBuffer = Obstacle.PointBuffer;
                     Bird.Wing.SoundBuffer = Bird.WingBuffer;
@@ -107,10 +108,11 @@ namespace FlopyBirdGame
                     Window.Display();
                 }
 
-                Mode = 0;
+                Mode = (bool)Fast;
+                Fast = null;
 
                 //Меню результата
-                while (Window.IsOpen && Mode == 0)
+                while (Window.IsOpen && Fast is null)
                 {
                     Window.DispatchEvents();
                     Window.Clear();
@@ -118,12 +120,12 @@ namespace FlopyBirdGame
                     Background.DrawBack();
                     Obstacle.DrawNotMove();
                     Bird.DrawBird();
-                    resultWin.DrawResultWindow(Obstacle.Count);
+                    resultWin.DrawResultWindow(Obstacle.Count, Mode);
 
                     if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
-                        Mode = 1;
+                        Fast = false;
                     if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
-                        Mode = 2;
+                        Fast = true;
 
                     Window.Display();
                 }

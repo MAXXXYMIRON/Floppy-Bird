@@ -173,6 +173,7 @@ namespace FlopyBirdGame
         //Новый рекорд
         Sprite New;
         BigInteger Best;
+        string[] Bests;
 
         public ResultInGameOver()
         {
@@ -210,7 +211,9 @@ namespace FlopyBirdGame
             New.Scale = ResultWindow.Scale;
             New.Position = new Vector2f(ResultWindow.Position.X + (64 * 3), ResultWindow.Position.Y + (30 * 3));
 
-            Best = BigInteger.Parse((File.ReadAllText("Best.txt") is "") ? "-1" : File.ReadAllText("Best.txt"));
+
+            Bests = (File.ReadAllLines("Best.txt").Length == 0) ? new string[2] { "-1", "-1" } : File.ReadAllLines("Best.txt");
+            if (Bests.Length == 1) Bests = new string[2] {Bests[0], "-1"};
         }
 
         //Выбор медали
@@ -226,15 +229,21 @@ namespace FlopyBirdGame
                 Medal = Platinum;
         }
 
-        public void DrawResultWindow(BigInteger Count)
+        public void DrawResultWindow(BigInteger Count, bool f = true)
         {
             PlayGame.Window.Draw(ResultWindow);
 
-            if (Count != Best) ChooseMedal(ref Count);
+            Best = BigInteger.Parse((f) ? Bests[1] : Bests[0]);
+
+            ChooseMedal(ref Count);
             if (Count > Best)
             {
                 Best = Count;
-                File.WriteAllText("Best.txt", Count.ToString());
+
+                if (!f) Bests[0] = Best.ToString();
+                else Bests[1] = Best.ToString();
+
+                File.WriteAllLines("Best.txt", Bests);
             }
             if (Count == Best) PlayGame.Window.Draw(New);
 
