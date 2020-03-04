@@ -26,7 +26,7 @@ namespace FlopyBirdGame
             Window.Clear();
 
             //Меню игры
-            while(Window.IsOpen && Fast is null)
+            while(Window.IsOpen && Fast == null)
             {
                 Window.DispatchEvents();
                 Window.Clear();
@@ -112,7 +112,7 @@ namespace FlopyBirdGame
                 Fast = null;
 
                 //Меню результата
-                while (Window.IsOpen && Fast is null)
+                while (Window.IsOpen && Fast == null)
                 {
                     Window.DispatchEvents();
                     Window.Clear();

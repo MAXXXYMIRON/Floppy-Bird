@@ -212,8 +212,24 @@ namespace FlopyBirdGame
             New.Position = new Vector2f(ResultWindow.Position.X + (64 * 3), ResultWindow.Position.Y + (30 * 3));
 
 
-            Bests = (File.ReadAllLines("Best.txt").Length == 0) ? new string[2] { "-1", "-1" } : File.ReadAllLines("Best.txt");
-            if (Bests.Length == 1) Bests = new string[2] {Bests[0], "-1"};
+            ReadFromFileBest();
+        }
+
+        void ReadFromFileBest()
+        {
+            Bests = File.ReadAllLines("Best.txt");
+            if (Bests.Length == 0) Bests = new string[2] { "-1", "-1" };
+            else if (Bests.Length > 2) Bests = new string[2] { "-1", "-1" };
+            else if (Bests.Length == 2)
+            {
+                if (Bests[0] == "") Bests[0] = "-1";
+                if (Bests[1] == "") Bests[1] = "-1";
+            }
+            else if (Bests.Length == 1)
+            {
+                if (Bests[0] == "") Bests = new string[2] {"-1", "-1"};
+                else Bests = new string[2] { Bests[0], "-1" };
+            }
         }
 
         //Выбор медали
