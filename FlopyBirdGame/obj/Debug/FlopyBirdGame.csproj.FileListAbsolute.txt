@@ -10,3 +10,15 @@ C:\Users\KNIGH\Desktop\FlopyBird\FlopyBirdGame\bin\Debug\sfml-graphics.dll
 C:\Users\KNIGH\Desktop\FlopyBird\FlopyBirdGame\bin\Debug\sfml-system.dll
 C:\Users\KNIGH\Desktop\FlopyBird\FlopyBirdGame\bin\Debug\sfml-window.dll
 C:\Users\KNIGH\Desktop\FlopyBird\FlopyBirdGame\obj\Debug\FlopyBirdGame.csproj.CopyComplete
+D:\MyBadProgramms\FlopyBird\FlopyBirdGame\bin\Debug\FlopyBirdGame.exe.config
+D:\MyBadProgramms\FlopyBird\FlopyBirdGame\bin\Debug\FlopyBirdGame.exe
+D:\MyBadProgramms\FlopyBird\FlopyBirdGame\bin\Debug\FlopyBirdGame.pdb
+D:\MyBadProgramms\FlopyBird\FlopyBirdGame\obj\Debug\FlopyBirdGame.csprojAssemblyReference.cache
+D:\MyBadProgramms\FlopyBird\FlopyBirdGame\obj\Debug\FlopyBirdGame.csproj.CoreCompileInputs.cache
+D:\MyBadProgramms\FlopyBird\FlopyBirdGame\obj\Debug\FlopyBirdGame.csproj.CopyComplete
+D:\MyBadProgramms\FlopyBird\FlopyBirdGame\obj\Debug\FlopyBirdGame.exe
+D:\MyBadProgramms\FlopyBird\FlopyBirdGame\obj\Debug\FlopyBirdGame.pdb
+D:\MyBadProgramms\FlopyBird\FlopyBirdGame\bin\Debug\FlopyBirdGame.exe.manifest
+D:\MyBadProgramms\FlopyBird\FlopyBirdGame\bin\Debug\FlopyBirdGame.application
+D:\MyBadProgramms\FlopyBird\FlopyBirdGame\obj\Debug\FlopyBirdGame.exe.manifest
+D:\MyBadProgramms\FlopyBird\FlopyBirdGame\obj\Debug\FlopyBirdGame.application
